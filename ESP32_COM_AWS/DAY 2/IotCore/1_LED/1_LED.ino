@@ -32,7 +32,6 @@ void connectAWSIoT() {
   espClient.setCACert(AWS_ROOT_CA);
   espClient.setCertificate(AWS_DEVICE_CERT);
   espClient.setPrivateKey(AWS_PRIVATE_KEY);
-  espClient.setInsecure(false);
   client.setServer(aws_endpoint, 8883);
   client.setCallback(callback);
 
