@@ -6,11 +6,11 @@
 #include "DHT.h" 
 
 // Wi-Fi Credentials
-const char* ssid = "Aariv_Technology";
-const char* password = "1286793808";
+const char* ssid = "YOUR SSID";
+const char* password = "YOUR PASSWORD";
 
 // AWS IoT Core Endpoint & MQTT Topic
-const char* aws_endpoint = "a223f6z9oxujhi-ats.iot.ap-south-1.amazonaws.com"; 
+const char* aws_endpoint = "YOUR ENDPOINT"; 
 const char* mqtt_topic = "esp32_dht11";
 
 // AWS IoT Client
@@ -42,7 +42,8 @@ void connectAWSIoT() {
 
   while (!client.connected()) {
     Serial.print("Connecting to AWS IoT...");
-    if (client.connect("ESP32_Client")) {
+    String clientId = "ESP32_" + WiFi.macAddress();
+    if (client.connect(clientId.c_str())) {
       Serial.println("Connected!");
     } else {
       Serial.print("Failed, rc=");
@@ -89,10 +90,13 @@ void setup() {
 }
 
 void loop() {
+  if (WiFi.status() != WL_CONNECTED) {
+    connectWiFi();
+  }
   if (!client.connected()) {
     connectAWSIoT();
   }
-  publishDHT11Data(); 
   client.loop();
-  delay(5000); 
+  publishDHT11Data();
+  delay(5000);
 }
