@@ -4,11 +4,11 @@
 #include "aws_certificates.h"
 
 // Wi-Fi Credentials
-const char* ssid = "Aariv_Technology";
-const char* password = "1286793808";
+const char* ssid = "YOUR SSID";
+const char* password = "YOUR PASSWORD";
 
 // AWS IoT Core Endpoint & MQTT Topic
-const char* aws_endpoint = "a223f6z9oxujhi-ats.iot.ap-south-1.amazonaws.com"; 
+const char* aws_endpoint = "YOUR ENDPOINT"; 
 const char* mqtt_topic = "esp32_led";
 
 // AWS IoT Client
@@ -32,12 +32,14 @@ void connectAWSIoT() {
   espClient.setCACert(AWS_ROOT_CA);
   espClient.setCertificate(AWS_DEVICE_CERT);
   espClient.setPrivateKey(AWS_PRIVATE_KEY);
+  espClient.setInsecure(false);
   client.setServer(aws_endpoint, 8883);
   client.setCallback(callback);
 
   while (!client.connected()) {
     Serial.print("Connecting to AWS IoT...");
-    if (client.connect("ESP32_Client")) {
+    String clientId = "ESP32_" + WiFi.macAddress();
+    if (client.connect(clientId.c_str())) {
       Serial.println("Connected!");
       client.subscribe(mqtt_topic);
     } else {
@@ -58,7 +60,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
   for (int i = 0; i < length; i++) {
     message += (char)payload[i];
   }
-  
+  message.trim();
   Serial.println("Message: " + message);
 
   if (message == "ON") {
@@ -80,6 +82,9 @@ void setup() {
 }
 
 void loop() {
+  if (WiFi.status() != WL_CONNECTED) {
+    connectWiFi();
+  }
   if (!client.connected()) {
     connectAWSIoT();
   }
