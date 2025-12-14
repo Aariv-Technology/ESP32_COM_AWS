@@ -2,8 +2,8 @@
 #include <PubSubClient.h>
 
 // WiFi credentials
-const char* ssid = "Excitel_AARIV TECHNOLOGY ";
-const char* password = "1286793808";
+const char* ssid = "OPPO F29";
+const char* password = "kavirakshi";
 
 // MQTT Broker
 const char* mqtt_server = "test.mosquitto.org";
@@ -36,8 +36,8 @@ void callback(char* topic, byte* message, unsigned int length) {
 void reconnect() {
   while (!client.connected()) {
     if (client.connect("ESP32_Subscriber")) {
-      client.subscribe("esp32/mqtt");
-      Serial.println("Subscribed to topic: esp32/mqtt");
+      client.subscribe("Tarun"); // topic
+      Serial.println("Subscribed to topic: Tarun");
     } else {
       delay(2000);
     }

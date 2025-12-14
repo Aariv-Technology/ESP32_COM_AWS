@@ -64,7 +64,7 @@ void loop() {
   char msg[50];
   snprintf(msg, 50, "Temp: %.2f C, Hum: %.2f %%", temp, hum);
 
-  client.publish("esp32/test", msg);
+  client.publish("esp32/test", msg);//topic
   Serial.print("Published: ");
   Serial.println(msg);
 

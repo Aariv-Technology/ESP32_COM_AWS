@@ -4,13 +4,14 @@
 #include <ArduinoJson.h>
 #include "aws_certificates.h"
 #include "DHT.h"
+#include <time.h>
 
 // Wi-Fi Credentials
-const char* ssid = "OPPO F29";
-const char* password = "kavirakshi";
+const char* ssid = "Excitel_AARIV TECHNOLOGY ";
+const char* password = "1286793808";
 
 // AWS IoT Core Endpoint & MQTT Topic
-const char* aws_endpoint = "a223f6z9oxujhi-ats.iot.eu-north-1.amazonaws.com";
+const char* aws_endpoint = "a223f6z9oxujhi-ats.iot.ap-south-1.amazonaws.com";
 const char* mqtt_topic = "esp32_dht11";
 
 // AWS IoT Client
@@ -22,6 +23,20 @@ PubSubClient client(espClient);
 #define DHTTYPE DHT11
 DHT dht(DHTPIN, DHTTYPE);
 
+// Function to get current timestamp
+String getTimestamp() {
+  time_t now;
+  struct tm timeinfo;
+  if (!getLocalTime(&timeinfo)) {
+    Serial.println("Failed to obtain time");
+    return "";
+  }
+  char timestamp[30];
+  strftime(timestamp, sizeof(timestamp), "%Y-%m-%dT%H:%M:%S", &timeinfo);
+  return String(timestamp);
+}
+
+// Function to connect to WiFi
 void connectWiFi() {
   Serial.print("Connecting to WiFi...");
   WiFi.begin(ssid, password);
@@ -30,8 +45,11 @@ void connectWiFi() {
     Serial.print(".");
   }
   Serial.println("\nConnected to WiFi!");
+
+  configTime(19800, 0, "pool.ntp.org", "time.nist.gov");
 }
 
+// Function to connect to AWS IoT Core
 void connectAWSIoT() {
   espClient.setCACert(AWS_ROOT_CA);
   espClient.setCertificate(AWS_DEVICE_CERT);
@@ -47,12 +65,14 @@ void connectAWSIoT() {
       Serial.println("Connected!");
     } else {
       Serial.print("Failed, rc=");
-      Serial.println(client.state());
+      Serial.print(client.state());
+      Serial.println(" Retrying in 5 seconds...");
       delay(5000);
     }
   }
 }
 
+// Function to publish DHT11 data
 void publishDHT11Data() {
   float temperature = dht.readTemperature();
   float humidity = dht.readHumidity();
@@ -62,13 +82,16 @@ void publishDHT11Data() {
     return;
   }
 
+  // Create JSON payload
   StaticJsonDocument<200> jsonDoc;
   jsonDoc["temperature"] = temperature;
   jsonDoc["humidity"] = humidity;
+  jsonDoc["id"] = getTimestamp();
 
   char payload[200];
   serializeJson(jsonDoc, payload);
 
+  // Publish data to AWS IoT Core
   if (client.publish(mqtt_topic, payload)) {
     Serial.println("Data published: ");
     Serial.println(payload);
@@ -80,6 +103,7 @@ void publishDHT11Data() {
 void setup() {
   Serial.begin(115200);
   dht.begin();
+
   connectWiFi();
   connectAWSIoT();
 }
@@ -92,8 +116,7 @@ void loop() {
   if (!client.connected()) {
     connectAWSIoT();
   }
-
-  client.loop();
   publishDHT11Data();
+  client.loop();
   delay(5000);
 }
