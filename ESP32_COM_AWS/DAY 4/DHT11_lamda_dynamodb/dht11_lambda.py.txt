@@ -1,21 +1,42 @@
 import boto3
+import json
 
 def lambda_handler(event, context):
-    client = boto3.client('dynamodb')
+    try:
+        # Create DynamoDB client
+        dynamodb = boto3.client('dynamodb')
 
-    # Extract values safely using .get()
-    temperature = event.get("temperature")
-    humidity = event.get("humidity")
-    timestamp = event.get("timestamp")
+        # Extract data from event (IoT Core payload)
+        temperature = event.get("temperature")
+        humidity = event.get("humidity")
+        timestamp = event.get("timestamp")
 
-    # Store in DynamoDB
-    response = client.put_item(
-        TableName='dht11',
-        Item={
-            'temperature': {'N': str(temperature)},  
-            'humidity': {'N': str(humidity)},       
-            'timestamp': {'S': str(timestamp)} 
+        # Validate input
+        if temperature is None or humidity is None or timestamp is None:
+            return {
+                "statusCode": 400,
+                "body": json.dumps("Missing required sensor data")
+            }
+
+        # Store data in DynamoDB
+        dynamodb.put_item(
+            TableName='dht11',
+            Item={
+                'timestamp': {'S': str(timestamp)},   # Partition key (recommended)
+                'temperature': {'N': str(temperature)},
+                'humidity': {'N': str(humidity)}
+            }
+        )
+
+        # Success response
+        return {
+            "statusCode": 200,
+            "body": json.dumps("Data stored successfully")
         }
-    )
 
-    return 0
+    except Exception as e:
+        # Error response
+        return {
+            "statusCode": 500,
+            "body": json.dumps(f"Error: {str(e)}")
+        }

@@ -7,12 +7,12 @@
 #include <time.h>
 
 // Wi-Fi Credentials
-const char* ssid = "Excitel_AARIV TECHNOLOGY ";
-const char* password = "1286793808";
+const char* ssid = "Swadha_Foundation";
+const char* password = "9902154933";
 
 // AWS IoT Core Endpoint & MQTT Topic
-const char* aws_endpoint = "a223f6z9oxujhi-ats.iot.ap-south-1.amazonaws.com";
-const char* mqtt_topic = "esp32_dht11";
+const char* aws_endpoint = "a223f6z9oxujhi-ats.iot.eu-north-1.amazonaws.com";
+const char* mqtt_topic = "Abhi2_dht11";
 
 // AWS IoT Client
 WiFiClientSecure espClient;
@@ -74,8 +74,11 @@ void connectAWSIoT() {
 
 // Function to publish DHT11 data
 void publishDHT11Data() {
-  float temperature = dht.readTemperature();
-  float humidity = dht.readHumidity();
+  // float temperature = dht.readTemperature();
+  // float humidity = dht.readHumidity();
+
+  float temperature = 30;
+  float humidity = 40;
 
   if (isnan(temperature) || isnan(humidity)) {
     Serial.println("Failed to read from DHT sensor!");

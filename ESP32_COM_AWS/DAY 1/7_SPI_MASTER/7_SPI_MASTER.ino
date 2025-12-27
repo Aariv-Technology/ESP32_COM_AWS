@@ -1,7 +1,7 @@
 #include <SPI.h>  // SPI communication library
 
-SPIClass spi = SPIClass(VSPI);  // Use VSPI
-// SPIClass spi = SPIClass(HSPI);   // Use HSPI
+//SPIClass spi = SPIClass(VSPI);  // Use VSPI
+ SPIClass spi = SPIClass(HSPI);   // Use HSPI
 
 #define CS 5  // Chip Select pin
 

@@ -3,14 +3,14 @@
 #include <PubSubClient.h>
 #include <HTTPClient.h>
 #include <Update.h>
-#include <ArduinoJson.h> 
+#include <ArduinoJson.h>
 
 // WiFi credentials
-const char* ssid = "Aariv_Technology";
+const char* ssid = "Excitel_AARIV TECHNOLOGY ";
 const char* password = "1286793808";
 
 // AWS IoT credentials
-const char* mqttServer = "a223f6z9oxujhi-ats.iot.ap-south-1.amazonaws.com";
+const char* mqttServer = "a223f6z9oxujhi-ats.iot.eu-north-1.amazonaws.com";
 const int mqttPort = 8883;
 const char* mqttTopic = "ota/update";
 
@@ -40,54 +40,54 @@ rqXRfboQnoZsG4q5WTP468SQvvG5
 
 const char AWS_CERT_CRT[] PROGMEM = R"EOF(
 -----BEGIN CERTIFICATE-----
-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
+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
 -----END CERTIFICATE-----
 )EOF";
 
 const char AWS_CERT_PRIVATE[] PROGMEM = R"EOF(
 -----BEGIN RSA PRIVATE KEY-----
-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
+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
 -----END RSA PRIVATE KEY-----
 )EOF";
 
@@ -99,92 +99,95 @@ PubSubClient client(net);
 #define LED_PIN 2  // Built-in LED on ESP32
 
 void callback(char* topic, byte* payload, unsigned int length) {
-    Serial.print("Message received: ");
-    String message;
-    for (int i = 0; i < length; i++) {
-        message += (char)payload[i];
-    }
-    Serial.println(message);
-    
-    // Parse JSON using ArduinoJSON
-    StaticJsonDocument<512> doc;  // Create a JSON document
-    DeserializationError error = deserializeJson(doc, message);
-    
-    if (error) {
-        Serial.print("JSON Parsing Failed: ");
-        Serial.println(error.f_str());
-        return;
-    }
+  Serial.print("Message received: ");
+  String message;
+  for (int i = 0; i < length; i++) {
+    message += (char)payload[i];
+  }
+  Serial.println(message);
 
-    // Extract firmware URL
-    if (doc.containsKey("firmware_url")) {
-        String firmwareURL = doc["firmware_url"].as<String>();
-        Serial.println("Firmware URL: " + firmwareURL);
-        performOTA(firmwareURL.c_str());
-    } else {
-        Serial.println("Error: Missing 'firmware_url' in JSON.");
-    }
+  // Parse JSON using ArduinoJSON
+  StaticJsonDocument<512> doc;  // Create a JSON document
+  DeserializationError error = deserializeJson(doc, message);
+
+  if (error) {
+    Serial.print("JSON Parsing Failed: ");
+    Serial.println(error.f_str());
+    return;
+  }
+
+  // Extract firmware URL
+  if (doc.containsKey("firmware_url")) {
+    String firmwareURL = doc["firmware_url"].as<String>();
+    Serial.println("Firmware URL: " + firmwareURL);
+    performOTA(firmwareURL.c_str());
+  } else {
+    Serial.println("Error: Missing 'firmware_url' in JSON.");
+  }
 }
 
 void performOTA(const char* firmwareURL) {
-    HTTPClient http;
-    http.begin(firmwareURL);
-    
-    int httpCode = http.GET();
-    if (httpCode == HTTP_CODE_OK) {
-        int contentLength = http.getSize();
-        WiFiClient* stream = http.getStreamPtr();
-        
-        if (!Update.begin(contentLength)) {
-            Serial.println("Not enough space for OTA.");
-            return;
-        }
+  HTTPClient http;
+  http.begin(firmwareURL);
 
-        size_t written = Update.writeStream(*stream);
-        if (written == contentLength && Update.end()) {
-            Serial.println("OTA Success! Restarting...");
-            ESP.restart();
-        } else {
-            Serial.println("OTA Failed!");
-        }
+  int httpCode = http.GET();
+  if (httpCode == HTTP_CODE_OK) {
+    int contentLength = http.getSize();
+    WiFiClient* stream = http.getStreamPtr();
+
+    if (!Update.begin(contentLength)) {
+      Serial.println("Not enough space for OTA.");
+      return;
     }
-    http.end();
+
+    size_t written = Update.writeStream(*stream);
+    if (written == contentLength && Update.end()) {
+      Serial.println("OTA Success! Restarting...");
+      ESP.restart();
+    } else {
+      Serial.println("OTA Failed!");
+    }
+  }
+  http.end();
 }
 
 void setup() {
-    Serial.begin(115200);
-    pinMode(LED_PIN, OUTPUT);
+  Serial.begin(115200);
+  pinMode(LED_PIN, OUTPUT);
 
-    WiFi.begin(ssid, password);
-    while (WiFi.status() != WL_CONNECTED) {
-      Serial.print(".");
-    }
-    Serial.println("Connected to WiFi");
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    Serial.print(".");
+    delay(100);
+  }
+  Serial.println("Connected to WiFi");
 
-    net.setCACert(AWS_CERT_CA);
-    net.setCertificate(AWS_CERT_CRT);
-    net.setPrivateKey(AWS_CERT_PRIVATE);
-    
-    client.setServer(mqttServer, mqttPort);
-    client.setCallback(callback);
-    
-    while (!client.connected()) {
-        Serial.println("Connecting to AWS IoT...");
-        if (client.connect("ESP32Client")) {
-            Serial.println("Connected!");
-            client.subscribe(mqttTopic);
-        } else {
-            Serial.print("Failed with state ");
-            Serial.println(client.state());
-            delay(2000);
-        }
+  net.setCACert(AWS_CERT_CA);
+  net.setCertificate(AWS_CERT_CRT);
+  net.setPrivateKey(AWS_CERT_PRIVATE);
+
+  client.setServer(mqttServer, mqttPort);
+  client.setCallback(callback);
+
+  while (!client.connected()) {
+    Serial.println("Connecting to AWS IoT...");
+    String clientId = "ESP32_" + WiFi.macAddress();
+
+    if (client.connect(clientId.c_str())) {
+      Serial.println("Connected!");
+      client.subscribe(mqttTopic);
+    } else {
+      Serial.print("Failed with state ");
+      Serial.println(client.state());
+      delay(2000);
     }
+  }
 }
 
 void loop() {
-    client.loop();
-    digitalWrite(LED_PIN, HIGH);
-    delay(100);
-    digitalWrite(LED_PIN, LOW);
-    delay(100);
+  client.loop();
+  digitalWrite(LED_PIN, HIGH);
+  delay(1000);
+  digitalWrite(LED_PIN, LOW);
+  delay(1000);
 }

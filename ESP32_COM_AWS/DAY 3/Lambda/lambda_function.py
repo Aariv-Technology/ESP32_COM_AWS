@@ -1,55 +1,55 @@
 import json
-import os
 import boto3
+import urllib.parse
+
+dynamodb = boto3.resource('dynamodb')
+table = dynamodb.Table('usertable')   # DynamoDB table name
 
 def lambda_handler(event, context):
     try:
-        mypage = page_router(event['httpMethod'], event['queryStringParameters'], event['body'])
-        return mypage
+        httpmethod = event["httpMethod"]
+        body = event.get("body", "")
+
+        if httpmethod == "GET":
+            return show_form()
+
+        elif httpmethod == "POST":
+            return handle_form(body)
+
     except Exception as e:
         return {
-            'statusCode': 500,
-            'body': json.dumps({'error': str(e)})
+            "statusCode": 500,
+            "body": json.dumps({"error": str(e)})
         }
 
-def page_router(httpmethod, querystring, formbody):
-    if httpmethod == 'GET':
-        try:
-            with open('contactus.html', 'r') as htmlFile:
-                htmlContent = htmlFile.read()
-            return {
-                'statusCode': 200,
-                'headers': {"Content-Type": "text/html"},
-                'body': htmlContent
-            }
-        except Exception as e:
-            return {
-                'statusCode': 500,
-                'body': json.dumps({'error': str(e)})
-            }
+# ---------- SHOW CONTACT FORM ----------
+def show_form():
+    with open("contactus.html", "r") as f:
+        html = f.read()
 
-    elif httpmethod == 'POST':
-        try:
-            insert_record(formbody)
-            with open('success.html', 'r') as htmlFile:
-                htmlContent = htmlFile.read()
-            return {
-                'statusCode': 200,
-                'headers': {"Content-Type": "text/html"},
-                'body': htmlContent
-            }
-        except Exception as e:
-            return {
-                'statusCode': 500,
-                'body': json.dumps({'error': str(e)})
-            }
+    return {
+        "statusCode": 200,
+        "headers": {"Content-Type": "text/html"},
+        "body": html
+    }
 
-def insert_record(formbody):
-    formbody = formbody.replace("=", "' : '")
-    formbody = formbody.replace("&", "', '")
-    formbody = "INSERT INTO usertable value {'" + formbody + "'}"
+# ---------- HANDLE FORM SUBMIT ----------
+def handle_form(body):
+    data = urllib.parse.parse_qs(body)
 
-    client = boto3.client('dynamodb')
-    response = client.execute_statement(Statement=formbody)
-    # Assuming the execute_statement call returns successfully
-    return response
+    table.put_item(
+        Item={
+            "email": data["email"][0],   # Partition Key
+            "name": data["name"][0],
+            "phone": data["phone"][0]
+        }
+    )
+
+    with open("success.html", "r") as f:
+        html = f.read()
+
+    return {
+        "statusCode": 200,
+        "headers": {"Content-Type": "text/html"},
+        "body": html
+    }

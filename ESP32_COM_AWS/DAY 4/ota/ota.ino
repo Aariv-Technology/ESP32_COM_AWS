@@ -2,13 +2,13 @@
 #include <WiFi.h>
 #include <ArduinoOTA.h>
 
-const char* ssid = "YourSSID";
-const char* password = "YourPassword";
-const int ledPin = 2; // Built-in LED pin on ESP32
+const char* ssid = "Excitel_AARIV TECHNOLOGY ";
+const char* password = "1286793808";
+const int ledPin = 2;  // Built-in LED pin on ESP32
 
 void setup() {
   Serial.begin(115200);
-  
+
   pinMode(ledPin, OUTPUT);
 
   WiFi.begin(ssid, password);
@@ -19,7 +19,7 @@ void setup() {
   Serial.println("\nConnected to WiFi");
 
   // Initialize OTA with a password
-ArduinoOTA.setPassword("OTAPassword");
+  ArduinoOTA.setPassword("OTAPassword");
 
   ArduinoOTA.onStart([]() {
     String type = (ArduinoOTA.getCommand() == U_FLASH) ? "sketch" : "filesystem";
